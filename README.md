@@ -52,14 +52,14 @@ Contiene los archivos relacionados con la base de datos, incluyendo modelos y mi
 
 #### 📂 `app/` - Router de la aplicación (Frontend + Backend)
 
-- **📂 **`` - Rutas API que manejan la lógica del backend.
+- **📂 api **`` - Rutas API que manejan la lógica del backend.
   - `auth/` - Manejo de autenticación.
   - `recursos/` - Endpoints relacionados con recursos.
   - `pagos/` - Endpoints relacionados con pagos, incluyendo webhooks.
-- **📂 **`` - Dashboard protegido de la aplicación.
-- **📂 **`` - Página de inicio de sesión.
-- **📂 **`` - Página de gestión de recursos.
-- **📂 **`` - Página de gestión de pagos.
+- 📂dashboard`` - Dashboard protegido de la aplicación.
+- 📂login`` - Página de inicio de sesión.
+- 📂recursos`` - Página de gestión de recursos.
+- 📂pagos`` - Página de gestión de pagos.
 - `layout.tsx` - Layout global de la aplicación.
 - `page.tsx` - Página principal de la aplicación.
 
