@@ -1,6 +1,14 @@
 import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
+import Header from "@/components/Header";
+import Footer from "@/components/Footer";
+
+interface LayoutProps {
+  children: React.ReactNode;
+  showHeader?: boolean;
+  showFooter?: boolean;
+}
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -19,15 +27,19 @@ export const metadata: Metadata = {
 
 export default function RootLayout({
   children,
-}: Readonly<{
-  children: React.ReactNode;
-}>) {
+  showHeader = true,
+  showFooter = true,
+}: Readonly<LayoutProps>) {
   return (
     <html lang="en">
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
-        {children}
+        <div className="grid grid-rows-[20px_fr_20px] min-h-screen max-h-screen">
+          {showHeader && <Header />}
+          <main className="row-start-2 items">{children}</main>
+          {showFooter && <Footer />}
+        </div>
       </body>
     </html>
   );
