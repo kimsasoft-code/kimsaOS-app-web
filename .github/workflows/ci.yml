@@ -1,31 +1,44 @@
-name: Restrict PR Approvals
+name: PR Build Check
 
 on:
   pull_request:
-    types: [submitted]  # Se ejecuta cuando alguien aprueba un PR
+    types: [opened, synchronize, reopened]
 
 jobs:
-  check-approval:
+  build:
     runs-on: ubuntu-latest
+
     steps:
-      - name: Obtener aprobaciones del PR
-        id: get-approvals
-        run: |
-          REVIEWERS=$(curl -s -H "Authorization: Bearer ${{ secrets.GITHUB_TOKEN }}" \
-            -H "Accept: application/vnd.github.v3+json" \
-            "https://api.github.com/repos/${{ github.repository }}/pulls/${{ github.event.pull_request.number }}/reviews" \
-            | jq -r '.[] | select(.state=="APPROVED") | .user.login')
+    - name: Checkout code
+      uses: actions/checkout@v3
 
-          echo "Aprobadores encontrados: $REVIEWERS"
+    - name: Set up Node.js 
+      uses: actions/setup-node@v3
+      with:
+        node-version: '22'
 
-          ALLOWED_USERS=("maintainer1" "maintainer2" "maintainer3")  # Reemplaza con los Maintainers
+    - name: Install dependencies
+      run: npm install
 
-          for reviewer in $REVIEWERS; do
-            if [[ ! " ${ALLOWED_USERS[@]} " =~ " ${reviewer} " ]]; then
-              echo "⚠️ El usuario $reviewer no tiene permiso para aprobar PRs."
-              exit 1
-            fi
-          done
-
-      - name: Permitir Merge
-        run: echo "✅ La aprobación es válida. Se puede proceder con el merge."
+    - name: Build project
+      run: npm run build
+      
+    - name: Notify PR reviewers if build fails
+      if: failure()
+      uses: actions/github-script@v6
+      with:
+        script: |
+          const { data: pr } = await github.rest.pulls.get({
+            owner: context.repo.owner,
+            repo: context.repo.repo,
+            pull_number: context.payload.pull_request.number,
+          });
+          const reviewers = pr.requested_reviewers.map(reviewer => reviewer.login).join(' @');
+          if (reviewers) {
+            await github.rest.issues.createComment({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              issue_number: context.payload.pull_request.number,
+              body: `@${reviewers} La build ha fallado. Por favor, no aprueben este PR hasta que se solucione el problema.`,
+            });
+          }
