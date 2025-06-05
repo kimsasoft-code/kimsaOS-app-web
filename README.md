@@ -20,14 +20,135 @@ You can start editing the page by modifying `app/page.tsx`. The page auto-update
 
 This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
 
-## Learn More
+## Structure Folder
+# Proyecto Next.js 15 con Prisma y ShadCN
 
-To learn more about Next.js, take a look at the following resources:
+Este proyecto es una aplicación web desarrollada con **Next.js 15**, utilizando **Prisma** para la gestión de base de datos y **ShadCN** para la UI.
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+## Tecnologías utilizadas
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+- **Next.js 15** - Framework de React para aplicaciones web
+- **Prisma** - ORM para manejar la base de datos
+- **ShadCN** - Biblioteca de componentes UI basada en Tailwind CSS
+- **Redux Toolkit** - Manejo de estado global
+- **TypeScript** - Tipado estático para mayor seguridad en el código
+
+## Estructura de Carpetas
+
+### 📂 `prisma/` - Configuración de Prisma para la base de datos
+
+Contiene los archivos relacionados con la base de datos, incluyendo modelos y migraciones.
+
+- `schema.prisma` - Esquema principal de la base de datos.
+- `models/` - Modelos de la base de datos separados en archivos.
+- `migrations/` - Historial de migraciones de la base de datos.
+- `seed.ts` - Script para poblar la base de datos con datos iniciales.
+
+### 📂 `scripts/` - Scripts personalizados
+
+- `generateEnums.js` - Generación automática de enums para el proyecto.
+
+### 📂 `src/` - Código fuente principal del proyecto
+
+#### 📂 `app/` - Router de la aplicación (Frontend + Backend)
+
+- **📂 api **`` - Rutas API que manejan la lógica del backend.
+  - `auth/` - Manejo de autenticación.
+  - `recursos/` - Endpoints relacionados con recursos.
+  - `pagos/` - Endpoints relacionados con pagos, incluyendo webhooks.
+- 📂dashboard`` - Dashboard protegido de la aplicación.
+- 📂login`` - Página de inicio de sesión.
+- 📂recursos`` - Página de gestión de recursos.
+- 📂pagos`` - Página de gestión de pagos.
+- `layout.tsx` - Layout global de la aplicación.
+- `page.tsx` - Página principal de la aplicación.
+
+#### 📂 `components/` - Componentes reutilizables
+
+- `ui/` - Componentes de interfaz como botones, modales y tablas.
+- `auth/` - Componentes relacionados con la autenticación.
+- `recursos/` - Componentes específicos para recursos.
+- `pagos/` - Componentes específicos para pagos.
+
+#### 📂 `hooks/` - Hooks personalizados
+
+Contiene funciones reutilizables como `useAuth.ts` para autenticación y `useFetch.ts` para llamadas a la API.
+
+#### 📂 `redux/` - Gestión de estado global con Redux Toolkit
+
+- `store.ts` - Configuración de Redux.
+- `slices/` - Slices para manejar el estado de autenticación, recursos y pagos.
+
+#### 📂 `services/` - Servicios para manejar la lógica de negocio y consumo de APIs
+
+- `auth/` - Lógica de autenticación y cliente HTTP.
+- `recursos/` - Lógica de recursos y cliente HTTP.
+- `pagos/` - Lógica de pagos y cliente HTTP.
+
+#### 📂 `domain/` - Modelos, interfaces y enums
+
+Define estructuras de datos y enumeraciones utilizadas en la aplicación.
+
+#### 📂 `infrastructure/` - Configuración y conexión con la base de datos
+
+- `database/` - Cliente de Prisma.
+- `repositories/` - Repositorios para interactuar con la base de datos.
+- `apiClients/` - Clientes para APIs externas.
+- `providers/` - Integraciones con proveedores externos.
+
+#### 📂 `styles/` - Estilos globales con CSS
+
+#### 📂 `config/` - Configuración global del proyecto
+
+- `routes.ts` - Definición de rutas.
+- `constants.ts` - Variables y constantes globales.
+
+#### 📂 `middleware/` - Middleware para la aplicación
+
+- `authMiddleware.ts` - Middleware de autenticación.
+
+## Configuración y Ejecución del Proyecto
+
+### 1. Clonar el repositorio
+
+```sh
+git clone <URL_DEL_REPO>
+cd <NOMBRE_DEL_PROYECTO>
+```
+
+### 2. Instalar dependencias
+
+```sh
+npm install
+```
+
+### 3. Configurar variables de entorno
+
+Crear un archivo `.env` y agregar las variables necesarias:
+
+```env
+DATABASE_URL="postgresql://usuario:contraseña@localhost:5432/basededatos"
+NEXTAUTH_SECRET="clave-secreta"
+```
+
+### 4. Ejecutar migraciones de Prisma
+
+```sh
+npx prisma migrate dev
+```
+
+### 5. Poblar la base de datos (Opcional)
+
+```sh
+npx prisma db seed
+```
+
+### 6. Iniciar el servidor de desarrollo
+
+```sh
+npm run dev
+```
+
 
 ## Deploy on Vercel
 
